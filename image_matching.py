@@ -2,9 +2,9 @@ import numpy as np
 import cv2
 import matplotlib.pyplot as plt
 
-background = cv2.imread("images/kart_oversikt_blindern.png")
+background = cv2.imread("dataset/map/kart_oversikt_blindern.png")
 background = cv2.cvtColor(background, cv2.COLOR_BGR2RGB)
-face = cv2.imread("images/blindern_vestgrensa.png")
+face = cv2.imread("dataset/map/blindern_vestgrensa.png")
 face = cv2.cvtColor(face, cv2.COLOR_BGR2RGB)
 height, width, channels = face.shape
 # print(background.shape)
