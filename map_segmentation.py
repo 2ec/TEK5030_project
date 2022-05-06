@@ -3,25 +3,7 @@ import networkx as nx
 import cv2
 import numpy as np
 import matplotlib.pyplot as plt
-
-
-def load_image(filepath:str) -> np.ndarray: 
-    img = cv2.imread(filepath)
-    return img
-
-
-def plot_images(imgs:list, titles:list) -> None:
-    """
-    Plots multiple images at once.
-    
-    Parameters: 
-        imgs    (list): A list of images on np.ndarray format.
-        titles  (list): A list of titles corresponding to the images in 'imgs'.
-    """
-    for i, img in enumerate(imgs):
-        cv2.imshow(titles[i], img)
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
+import image_plotter
 
 def segment_map_road(img:np.ndarray, max_value=255) -> np.ndarray:
     zeros = np.zeros(img.shape[:2], dtype=img.dtype)
@@ -33,18 +15,6 @@ def segment_map_road(img:np.ndarray, max_value=255) -> np.ndarray:
     seg_img = np.where((b == g) & (b == r) & (b > 120) & (b < 190), ones, zeros)
     return seg_img
 
-def extend_image_channels(img:np.ndarray, num_chanels:int):
-    x, y, *_ = img.shape
-    new_img = np.zeros((x, y, num_chanels), dtype=img.dtype)
-    for i in range(num_chanels):
-        new_img[:, :, i] = img
-    return new_img
-
-def get_overlay_img(img1:np.ndarray, img2:np.ndarray, alpha:int=0.5):
-    overlay = img1.copy()
-    output = img2.copy()
-    new_img = cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-    return new_img
 
 def morpho_clean_img(img:np.ndarray, kernel_size=3):
     kernel_cross = cv2.getStructuringElement(cv2.MORPH_CROSS, (kernel_size,kernel_size))
@@ -59,14 +29,14 @@ def morpho_clean_img(img:np.ndarray, kernel_size=3):
 
 def extract_roads_from_image(img, plot_imgs=False):
     seg_img = segment_map_road(img)
-    seg_img_three_channels = extend_image_channels(seg_img, 3)
-    overlay_img = get_overlay_img(seg_img_three_channels, img, alpha=0.5)
+    seg_img_three_channels = image_plotter.extend_image_channels(seg_img, 3)
+    overlay_img = image_plotter.get_overlay_img(seg_img_three_channels, img, alpha=0.5)
     close, open, blured, diff = morpho_clean_img(seg_img, kernel_size=3)
     
     if plot_imgs:
         images = [img, seg_img, close, open, blured, diff, overlay_img]
         titles = ["original", "seg", "close", "open", "blured", "diff", "overlay"]
-        plot_images(images, titles)
+        image_plotter.plot_images(images, titles)
     return open
 
 def get_road_img_from_center_point(center_point:tuple, dist:int=800, edge_linewidth:float=2.5, road_type:str="drive", show:bool=True, save_filename:str=None) -> nx.MultiDiGraph:
@@ -130,7 +100,7 @@ def get_k_shortest_paths(G:nx.MultiDiGraph, origin_point:tuple, destination_poin
 
 if __name__ == "__main__":
     filepath = "dataset/map/blindern_kart.png"
-    img = load_image(filepath)
+    img = image_plotter.load_image(filepath)
     # morpho_open = extract_roads_from_image(img, plot_imgs=True)
  
     center_point = (59.9433832, 10.727962) # Blindern
