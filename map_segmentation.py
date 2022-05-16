@@ -80,8 +80,16 @@ def get_road_img_from_center_point(center_point:tuple, dist:int=800, edge_linewi
     return G
 
 
+def get_buildings_from_center_point(center_point:tuple, dist:int=800):
+    buildings = ox.geometries.geometries_from_point(center_point, dist=dist, tags={'building':True})
 
-def get_k_shortest_paths(G:nx.MultiDiGraph, origin_point:tuple, destination_point:tuple, center_point, dist, k=1, plot=True, save_filename=None) -> None:
+    return buildings
+
+
+def get_area_from_center_point(center_point:tuple, dist:int=800):
+    ox.geometries_from_point(center_point=center_point, dist=dist)
+
+def get_k_shortest_paths(G:nx.MultiDiGraph, origin_point:tuple, destination_point:tuple, center_point, dist, k=1, save_filename=None, show=False) -> None:
     # https://www.geosnips.com/blogpost/osmnx-handling-street-networks
     save = False if save_filename is None else True
 
@@ -90,23 +98,39 @@ def get_k_shortest_paths(G:nx.MultiDiGraph, origin_point:tuple, destination_poin
     bbox = ox.utils_geo.bbox_from_point(point=center_point, dist=dist)
 
     if k > 1:
-        routes = ox.k_shortest_paths(G, origin_node, destination_node, k=k, weight="length")
-        fig, ax = ox.plot_graph_routes(G, list(routes), bbox=bbox, route_colors="r", route_linewidth=2, edge_linewidth=2.0, node_size=0, save=save, filepath=save_filename)
+        route = ox.k_shortest_paths(G, origin_node, destination_node, k=k, weight="length")
+        if show or save:
+            fig, ax = ox.plot_graph_routes(G, list(route), bbox=bbox, route_colors="r", route_linewidth=2, edge_linewidth=2.0, node_size=0, save=save, filepath=save_filename)
     else:
         route = ox.shortest_path(G, origin_node,destination_node)
-        fig, ax = ox.plot_graph_route(G, route, bbox=bbox, route_color="r", route_linewidth=6, edge_linewidth=2.0, node_size=0, bgcolor="k", save=save, filepath=save_filename)
+        if show or save:
+            fig, ax = ox.plot_graph_route(G, route, bbox=bbox, route_color="r", route_linewidth=6, edge_linewidth=2.0, node_size=0, bgcolor="k", save=save, filepath=save_filename)
     
-    
+    return route
 
 if __name__ == "__main__":
-    filepath = "dataset/map/blindern_kart.png"
-    img = image_plotter.load_image(filepath)
+    # filepath = "dataset/map/blindern_kart.png"
+    show = False
+    # img = image_plotter.load_image(filepath)
     # morpho_open = extract_roads_from_image(img, plot_imgs=True)
  
     center_point = (59.9433832, 10.727962) # Blindern
     dist = 800
-    G = get_road_img_from_center_point(center_point, dist=dist, edge_linewidth=2.0, save_filename="blindern_roads.png", show=False)
-    
+    G = get_road_img_from_center_point(center_point, dist=dist, edge_linewidth=2.0, show=show)
+    buildings = get_buildings_from_center_point(center_point, dist)
     ullevaal_stadion = (59.9488169, 10.7318353)
     blindern_studenterhjem = (59.9403866, 10.7205299)
-    # get_k_shortest_paths(G, origin_point=ullevaal_stadion, destination_point=blindern_studenterhjem, k=1, center_point=center_point, dist=dist, save_filename="shortest_path_ullevaal_stadion_blindern_studenterhjem.png")
+    route = get_k_shortest_paths(G, origin_point=ullevaal_stadion, destination_point=blindern_studenterhjem, k=1, center_point=center_point, dist=dist, show=show)
+
+    #image_plotter.plot_roads_buildings_shortest_path(G, buildings, route)
+
+    maptiles = ('cartodbpositron','openstreetmap')
+    edge_colors = ('#22ffcc',)
+
+    graph_map = ox.plot_graph_folium(G, graph_map=None, 
+                                              popup_attribute=None, 
+                                              tiles=maptiles[0], 
+                                              zoom=19, 
+                                              fit_bounds=True, 
+                                              )
+    graph_map.render()
