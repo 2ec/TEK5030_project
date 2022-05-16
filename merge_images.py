@@ -2,6 +2,9 @@ import cv2
 import numpy as np
 import image_plotter
 import matplotlib.pyplot as plt
+import networkx as nx
+import map_segmentation
+import osmnx as ox
 
 
 def get_affine_transformation(img, pts1, pts2):
@@ -30,9 +33,21 @@ def rotate_crop_img(img, pts1, pts2, plot=False):
     return new_img
 
 
+def image_to_graph(img:np.ndarray) -> nx.MultiGraph:
+    x, y, _ = img.shape
+
+    if x > y:
+        img = img[:y, :y, 0]
+    else:
+        img = img[:x, :x, 0]
+
+    G = nx.from_numpy_matrix(img, create_using=nx.MultiGraph)
+    return G
+
 def main():
     img = cv2.imread("dataset/map_segmented_roads/blindern_roads.png")
     plot = True
+
     # Rotate
     pts1 = np.float32([[55,55],[355,55],[555,350],[1550,1650]])
     pts2 = np.float32([[0,0],[300,0],[500,300],[1500,1600]])
@@ -67,5 +82,19 @@ def main():
     plt.imshow(overlay)
     plt.show()
 
+
+def main1():
+    img = cv2.imread("dataset/map_segmented_roads/blindern_roads.png")
+    graph = image_to_graph(img)
+    graph = nx.Graph(graph)
+
+    center_point = (59.9433832, 10.727962) # Blindern
+    dist = 800
+    G = map_segmentation.get_road_img_from_center_point(center_point, dist=dist, edge_linewidth=2.0, show=False)
+    G = nx.Graph(G)
+
+    print(nx.faster_could_be_isomorphic(G, G.copy()))
+
 if __name__ == "__main__":
     main()
+    # main1()
