@@ -8,7 +8,7 @@ import osmnx as ox
 
 
 def get_affine_transformation(img, pts1, pts2):
-    rows,cols,ch = img.shape
+    rows,cols, *_ = img.shape
     
     M = cv2.getPerspectiveTransform(pts1,pts2)
     dst = cv2.warpPerspective(src=img, M=M, dsize=(cols, rows))
@@ -95,6 +95,53 @@ def main1():
 
     print(nx.faster_could_be_isomorphic(G, G.copy()))
 
+
+def main3():
+    ifi = (59.9435754, 10.7181494)
+    dist = 200
+    img_ifi = cv2.imread("dataset/satellite/blindern_ifi.png")
+    
+    G = map_segmentation.get_road_img_from_center_point(center_point=ifi, dist=dist, edge_linewidth=2.0, show=False, road_type="drive")
+    buildings = map_segmentation.get_buildings_from_center_point(center_point=ifi, dist=dist)
+    nodes, edges = ox.graph_to_gdfs(G)
+
+    
+    ax1 = plt.subplot(121)
+    ax1.set_facecolor("black")
+    buildings.plot(ax=ax1, facecolor="khaki", alpha=1.0,)
+    edges.plot(ax=ax1, linewidth=2, edgecolor="white")
+    #ax1.imshow(img_ifi)
+    plt.title('ifi')
+
+    ax2 = plt.subplot(122)
+    ax2.imshow(img_ifi)
+    plt.title('Roads')
+    plt.show()
+    
+    pts1 = np.float32([
+        [10.721105, 59.9441596],
+        [10.718055, 59.944496],
+        [10.722278, 59.943155],
+        [10.719949, 59.944371]])
+    pts2 = np.float32([
+        [995.0, 290.0],
+        [504.7, 120.0],
+        [1208.6, 632.1],
+        [850.3, 200.0]])
+
+    minx, miny, maxx, maxy = edges.total_bounds
+    x_diff = int(maxx - minx)
+    y_diff = int(maxy - miny)
+
+    x, y, *_ = img_ifi.shape
+    rotated_boarder = cv2.rectangle(img_ifi, (0,0), (x,y), color=(255, 0, 0), thickness=30)
+    unrotate = np.zeros((x_diff, y_diff), dtype=np.uint8)
+    unrotate[10.71505:10.71530, 59.94510:59.94222] = rotated_boarder.copy()
+    unrotate = get_affine_transformation(unrotate, pts2, pts1)
+    plt.imshow(unrotate)
+    plt.show()
+
 if __name__ == "__main__":
-    main()
+    # main()
     # main1()
+    main3()
