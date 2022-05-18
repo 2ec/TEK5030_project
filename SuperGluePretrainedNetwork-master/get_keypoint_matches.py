@@ -1,4 +1,5 @@
 import operator
+import os
 import cv2
 import numpy as np
 from scipy import ndimage
@@ -57,6 +58,7 @@ def crop_image(imagepath, bottom_percent, top_percent):
     return new_image
 
 def rotate_image(image, rot_deg):
+
     return ndimage.rotate(image, rot_deg)
 
 def resize_image(img, scale_percent=80):
@@ -67,18 +69,27 @@ def resize_image(img, scale_percent=80):
     # resize image
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
-# imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/superglue/SuperGluePretrainedNetwork-master/assets/scannet_sample_images/blindern1.png"
+
+
+os_path = os.getcwd()
+dir_path = os.path.join(os_path,"assets/test_images/")
+image_name = "blindern_flyfoto_mini.png"
+imagepath = os.path.join(dir_path, image_name)
+
+image = cv2.imread(imagepath)
 # percent = 0.7
 # image = crop_image(imagepath, 1- percent, percent)
-# rot_deg = 10
+rot_deg = 10
 # # image = cv2.rotate(image, cv2.cv2.ROTATE_45_CLOCKWISE)
 # kernel = (2,2)
 # blur_image = cv2.blur(image, kernel)
 # name = "scale"
+name = "rotate"
 # # scale_percent = 60
 # # image = resize_image(image, scale_percent=scale_percent)
-# # name = f"resize_{scale_percent}"
-# cv2.imwrite(f"/Users/joaroldernes/dokumenter/universitet/TEK5030/superglue/SuperGluePretrainedNetwork-master/assets/scannet_sample_images/blindern_{name}_07.png", image)
+# # name = f"resize_{scale_percent}"¨
+image = rotate_image(image, rot_deg)
+cv2.imwrite(f"{dir_path}{image_name[:-4]}_{name}_{rot_deg}.png", image)
 path = 'result_images/blindern1_blindern_scale_07_matches.npz'
 
 points = get_keypoints(path)

@@ -47,6 +47,7 @@
 from pathlib import Path
 import argparse
 import random
+import cv2
 import numpy as np
 import matplotlib.cm as cm
 import torch
@@ -432,7 +433,9 @@ class match_image:
             print('{:.2f}\t {:.2f}\t {:.2f}\t {:.2f}\t {:.2f}\t'.format(
                 aucs[0], aucs[1], aucs[2], prec, ms))
 
-# if __name__ == '__main__':
-#     main_img = "/Users/joaroldernes/dokumenter/universitet/TEK5030/superglue/SuperGluePretrainedNetwork-master/assets/scannet_sample_images/blindern1.png"
-#     side_img = f"/Users/joaroldernes/dokumenter/universitet/TEK5030/superglue/SuperGluePretrainedNetwork-master/assets/scannet_sample_images/blindern_rotate_resize_60_07.png"
-#     match_img = match_image(main_img, side_img)
+if __name__ == '__main__':
+    main_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini.png"
+    side_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini.png"
+    main_image = cv2.imread(main_imagepath)
+    side_image = cv2.imread(side_imagepath)
+    match_img = match_image(main_image, side_image)
