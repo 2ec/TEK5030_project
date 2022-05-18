@@ -1,0 +1,6 @@
+baerum_sving_big.png baerum_sving_unet.png
+blindern1.png blindern_scale_07.png
+blindern1.png blindern_rotate_22_07.png
+blindern1.png blindern_rotate_45_07.png
+blindern_campus.png blindern_bs.png
+blindern_kart_mellom.png blindern_flyfoto.png
