@@ -9,13 +9,16 @@ def load_image(filepath:str) -> np.ndarray:
     img = cv2.imread(filepath)
     return img
 
-def plot_roads_buildings_shortest_path(G:MultiDiGraph, buildings:GeoDataFrame, route:list) -> None:
+def plot_roads_buildings_shortest_path(G:MultiDiGraph, buildings:GeoDataFrame=None, route:list=None) -> None:
     nodes, edges = ox.graph_to_gdfs(G)
 
     fig, ax = plt.subplots(figsize=(12,8))
     ax.set_facecolor("black")
-    buildings.plot(ax=ax, facecolor="khaki", alpha=1.0,)
-    edges.plot(ax=ax, linewidth=2, edgecolor='#BC8F8F')
+
+    if buildings is not None:
+        buildings.plot(ax=ax, facecolor="khaki", alpha=1.0,)
+    
+    edges.plot(ax=ax, linewidth=2, edgecolor="white")
     
     """
     texts = []
@@ -27,9 +30,10 @@ def plot_roads_buildings_shortest_path(G:MultiDiGraph, buildings:GeoDataFrame, r
             texts.append(text)
             ax.annotate(text, (c.x, c.y), c='w')
     """
-    ox.plot_graph_route(G,  route, route_color="r", ax=ax)
-    
-    
+    if route is not None:
+        ox.plot_graph_route(G,  route, route_color="r", ax=ax)
+    plt.tight_layout()
+    plt.savefig("dataset/map_segmented_roads/roads_buildings.png", dpi=700, bbox_inches='tight', pad_inches=0)
     plt.show()
 
 def plot_images(imgs:list, titles:list) -> None:
