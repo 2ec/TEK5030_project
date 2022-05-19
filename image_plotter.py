@@ -16,6 +16,7 @@ def plot_roads_buildings_shortest_path(G:MultiDiGraph, buildings:GeoDataFrame=No
     ax.set_facecolor("black")
 
     if buildings is not None:
+        print("Buildings")
         buildings.plot(ax=ax, facecolor="khaki", alpha=1.0,)
     
     edges.plot(ax=ax, linewidth=2, edgecolor="white")
@@ -31,8 +32,10 @@ def plot_roads_buildings_shortest_path(G:MultiDiGraph, buildings:GeoDataFrame=No
             ax.annotate(text, (c.x, c.y), c='w')
     """
     if route is not None:
-        ox.plot_graph_route(G,  route, route_color="r", ax=ax)
+        print("Route")
+        ox.plot_graph_route(G, route, route_color="r", ax=ax, route_alpha=0.7)
     plt.tight_layout()
+    plt.title("Roads")
     plt.savefig("dataset/map_segmented_roads/roads_buildings.png", dpi=700, bbox_inches='tight', pad_inches=0)
     plt.show()
 

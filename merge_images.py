@@ -110,7 +110,6 @@ def main3():
     ax1.set_facecolor("black")
     buildings.plot(ax=ax1, facecolor="khaki", alpha=1.0,)
     edges.plot(ax=ax1, linewidth=2, edgecolor="white")
-    #ax1.imshow(img_ifi)
     plt.title('ifi')
 
     ax2 = plt.subplot(122)
@@ -133,11 +132,13 @@ def main3():
     x_diff = int(maxx - minx)
     y_diff = int(maxy - miny)
 
-    x, y, *_ = img_ifi.shape
+    y, x, *_ = img_ifi.shape
     rotated_boarder = cv2.rectangle(img_ifi, (0,0), (x,y), color=(255, 0, 0), thickness=30)
-    unrotate = np.zeros((x_diff, y_diff), dtype=np.uint8)
-    unrotate[10.71505:10.71530, 59.94510:59.94222] = rotated_boarder.copy()
+    unrotate = np.zeros((x_diff, y_diff, 3), dtype=np.uint8)
+    print(unrotate.shape)
+    unrotate[11378-825:11378, 7807-1440:7807] = rotated_boarder.copy()
     unrotate = get_affine_transformation(unrotate, pts2, pts1)
+    
     plt.imshow(unrotate)
     plt.show()
 
