@@ -71,10 +71,10 @@ def resize_image(img, scale_percent=80):
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
 
-def get_matchpoints(img1, img2):
+def get_matchpoints(img1, img2, num_keypoints=4):
     superglue = match_image(img1, img2)
     output = superglue.run_code()
-    keypoints = get_keypoints(output)
+    keypoints = get_keypoints(output, num_keypoints=num_keypoints)
     return keypoints
 
 
