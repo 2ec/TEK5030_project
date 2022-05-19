@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import map_segmentation
 import osmnx as ox
+from SuperGluePretrainedNetwork import get_keypoint_matches
 
 
 def get_affine_transformation(img, pts1, pts2):
@@ -142,7 +143,17 @@ def main3():
     plt.imshow(unrotate)
     plt.show()
 
+
+def main4():
+    kjeller_fly_medium = cv2.imread("dataset/map/kjeller_flyfoto_medium.png")
+    kjeller_map = cv2.imread("dataset/map/kjeller_kart_lite.png")
+
+    get_keypoint_matches.get_matchpoints(img1=kjeller_fly_medium, img2=kjeller_map)
+    
+
+
 if __name__ == "__main__":
     # main()
     # main1()
-    main3()
+    # main3()
+    main4()
