@@ -3,8 +3,9 @@ import os
 import cv2
 import numpy as np
 from scipy import ndimage
+from match_images_test import match_image
 
-def get_keypoints(npzpath, num_keypoints=4):
+def get_keypoints(npz, num_keypoints=4):
     """
     Input: 
         npzpath: path to npz matching file
@@ -14,7 +15,7 @@ def get_keypoints(npzpath, num_keypoints=4):
     
     """
 
-    npz = np.load(npzpath)
+    # npz = np.load(npzpath)
     # print(npz.files)
     #['keypoints0', 'keypoints1', 'matches', 'match_confidence']
 
@@ -70,6 +71,13 @@ def resize_image(img, scale_percent=80):
     resized = cv2.resize(img, dim, interpolation = cv2.INTER_AREA)
     return resized
 
+def get_matchpoints(img1, img2):
+    superglue = match_image(img1, img2)
+    output = superglue.run_code()
+    keypoints = get_keypoints(output)
+    return keypoints
+
+
 
 os_path = os.getcwd()
 dir_path = os.path.join(os_path,"assets/test_images/")
@@ -92,5 +100,12 @@ image = rotate_image(image, rot_deg)
 cv2.imwrite(f"{dir_path}{image_name[:-4]}_{name}_{rot_deg}.png", image)
 path = 'result_images/blindern1_blindern_scale_07_matches.npz'
 
-points = get_keypoints(path)
-print(points)
+# points = get_keypoints(path)
+# print(points)
+main_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini.png"
+side_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini_rotate_5.png"
+main_image = cv2.imread(main_imagepath)
+side_image = cv2.imread(side_imagepath)
+
+keypoints = get_matchpoints(main_image, side_image)
+print(keypoints)

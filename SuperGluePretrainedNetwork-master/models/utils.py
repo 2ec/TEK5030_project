@@ -261,7 +261,9 @@ def frame2tensor(frame, device):
 
 
 def read_image(path, device, resize, rotation, resize_float):
-    image = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
+    # image = cv2.imread(str(path), cv2.IMREAD_GRAYSCALE)
+    # print("pth", path)
+    image = cv2.cvtColor(path, cv2.COLOR_BGR2GRAY)
     if image is None:
         return None, None, None
     w, h = image.shape[1], image.shape[0]

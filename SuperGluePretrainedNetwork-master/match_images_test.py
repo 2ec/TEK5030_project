@@ -67,9 +67,9 @@ class match_image:
     def __init__(self, main_image, part_image, *args) -> None:
         self.main_image = main_image
         self.part_image = part_image
-        self.h, self.w, self.channels = main_image.shape
+        # self.h, self.w, self.channels = main_image.shape
 
-    if __name__ == '__main__':
+    def run_code(self):
         parser = argparse.ArgumentParser(
             description='Image pair matching and pose evaluation with SuperGlue',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -148,6 +148,9 @@ class match_image:
             help='Force pytorch to run in CPU mode.')
 
         opt = parser.parse_args()
+        opt.viz = True #!
+        opt.superglue = 'outdoor'
+        opt.resize = [-1]
         print(opt)
 
         assert not (opt.opencv_display and not opt.viz), 'Must use --viz with --opencv_display'
@@ -227,7 +230,8 @@ class match_image:
             # Handle --cache logic.
             do_match = True
             do_eval = opt.eval
-            do_viz = opt.viz
+            # do_viz = opt.viz
+            do_viz = True #!
             do_viz_eval = opt.eval and opt.viz
             if opt.cache:
                 if matches_path.exists():
@@ -268,10 +272,15 @@ class match_image:
                 rot0, rot1 = 0, 0
 
             # Load the image pair.
+            # image0, inp0, scales0 = read_image(
+            #     input_dir / name0, device, opt.resize, rot0, opt.resize_float)
+            # image1, inp1, scales1 = read_image(
+            #     input_dir / name1, device, opt.resize, rot1, opt.resize_float)
             image0, inp0, scales0 = read_image(
-                input_dir / name0, device, opt.resize, rot0, opt.resize_float)
+                self.main_image, device, opt.resize, rot0, opt.resize_float)
             image1, inp1, scales1 = read_image(
-                input_dir / name1, device, opt.resize, rot1, opt.resize_float)
+                self.part_image, device, opt.resize, rot1, opt.resize_float)
+            print(image0.shape, image1.shape)
             if image0 is None or image1 is None:
                 print('Problem reading image pair: {} {}'.format(
                     input_dir/name0, input_dir/name1))
@@ -432,10 +441,15 @@ class match_image:
             print('AUC@5\t AUC@10\t AUC@20\t Prec\t MScore\t')
             print('{:.2f}\t {:.2f}\t {:.2f}\t {:.2f}\t {:.2f}\t'.format(
                 aucs[0], aucs[1], aucs[2], prec, ms))
+        
+        return out_matches
 
 if __name__ == '__main__':
     main_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini.png"
-    side_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini.png"
+    side_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini_rotate_5.png"
     main_image = cv2.imread(main_imagepath)
     side_image = cv2.imread(side_imagepath)
+    print("jei")
     match_img = match_image(main_image, side_image)
+    out = match_img.run_code()
+    
