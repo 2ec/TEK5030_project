@@ -78,34 +78,37 @@ def get_matchpoints(img1, img2, num_keypoints=4):
     return keypoints
 
 
+if __name__ == "__main__":
+    os_path = os.getcwd()
+    dir_path = os.path.join(os_path,"assets/test_images/")
 
-os_path = os.getcwd()
-dir_path = os.path.join(os_path,"assets/test_images/")
-image_name = "blindern_flyfoto_mini.png"
-imagepath = os.path.join(dir_path, image_name)
 
-image = cv2.imread(imagepath)
-# percent = 0.7
-# image = crop_image(imagepath, 1- percent, percent)
-rot_deg = 10
-# # image = cv2.rotate(image, cv2.cv2.ROTATE_45_CLOCKWISE)
-# kernel = (2,2)
-# blur_image = cv2.blur(image, kernel)
-# name = "scale"
-name = "rotate"
-# # scale_percent = 60
-# # image = resize_image(image, scale_percent=scale_percent)
-# # name = f"resize_{scale_percent}"¨
-image = rotate_image(image, rot_deg)
-cv2.imwrite(f"{dir_path}{image_name[:-4]}_{name}_{rot_deg}.png", image)
-path = 'result_images/blindern1_blindern_scale_07_matches.npz'
 
-# points = get_keypoints(path)
-# print(points)
-main_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini.png"
-side_imagepath = "/Users/joaroldernes/dokumenter/universitet/TEK5030/project/TEK5030_project/SuperGluePretrainedNetwork-master/assets/test_images/blindern_flyfoto_mini_rotate_5.png"
-main_image = cv2.imread(main_imagepath)
-side_image = cv2.imread(side_imagepath)
+    # image = cv2.imread(imagepath1)
+    # percent = 0.7
+    # image = crop_image(imagepath, 1- percent, percent)
+    rot_deg = 10
+    # # image = cv2.rotate(image, cv2.cv2.ROTATE_45_CLOCKWISE)
+    # kernel = (2,2)
+    # blur_image = cv2.blur(image, kernel)
+    # name = "scale"
+    name = "rotate"
+    # # scale_percent = 60
+    # # image = resize_image(image, scale_percent=scale_percent)
+    # # name = f"resize_{scale_percent}"¨
+    # image = rotate_image(image, rot_deg)
+    # cv2.imwrite(f"{dir_path}{image_name1[:-4]}_{name}_{rot_deg}.png", image)
+    path = 'result_images/blindern1_blindern_scale_07_matches.npz'
 
-keypoints = get_matchpoints(main_image, side_image)
-print(keypoints)
+    # points = get_keypoints(path)
+    # print(points)
+    image_name1 = "kjeller_kart_lite.png"
+    image_name2 = "kjeller_flyfoto_medium.png"
+    imagepath1 = os.path.join(dir_path, image_name1)
+    imagepath2 = os.path.join(dir_path, image_name1)
+    main_imagepath = os.path.join(dir_path, image_name1)
+    side_imagepath = os.path.join(dir_path, image_name2)
+    main_image = cv2.imread(main_imagepath)
+    side_image = cv2.imread(side_imagepath)
+
+    keypoints = get_matchpoints(main_image, side_image)

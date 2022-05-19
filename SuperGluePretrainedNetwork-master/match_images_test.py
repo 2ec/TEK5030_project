@@ -151,6 +151,8 @@ class match_image:
         opt.viz = True #!
         opt.superglue = 'outdoor'
         opt.resize = [-1]
+        # opt.resize__float = False
+        output_names = "result_images"
         print(opt)
 
         assert not (opt.opencv_display and not opt.viz), 'Must use --viz with --opencv_display'
@@ -219,7 +221,9 @@ class match_image:
 
         timer = AverageTimer(newline=True)
         for i, pair in enumerate(pairs):
-            name0, name1 = pair[:2]
+            # name0, name1 = pair[:2]
+            name0 = output_names
+            name1 = output_names
             stem0, stem1 = Path(name0).stem, Path(name1).stem
             matches_path = output_dir / '{}_{}_matches.npz'.format(stem0, stem1)
             eval_path = output_dir / '{}_{}_evaluation.npz'.format(stem0, stem1)
