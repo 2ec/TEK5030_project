@@ -154,10 +154,10 @@ if __name__ == "__main__":
     G = get_road_img_from_center_point(center_point, dist=dist, edge_linewidth=2.0, show=show, road_type="drive")
     
     buildings = get_buildings_from_center_point(center_point, dist)
-    route = get_k_shortest_paths(G, origin_point=center_point, destination_point=ullevaal_stadion, k=1, center_point=center_point, dist=dist, show=False)
+    blindern_studenterhjem = (59.9403866, 10.7205299)
+    route = get_k_shortest_paths(G, origin_point=ullevaal_stadion, destination_point=blindern_studenterhjem, k=1, center_point=center_point, dist=dist, show=False)
     #image_plotter.plot_roads_buildings_shortest_path(G, buildings, route)
-    #blindern_studenterhjem = (59.9403866, 10.7205299)
 
-    image_plotter.plot_roads_buildings_shortest_path(G, buildings=buildings)
+    image_plotter.plot_roads_buildings_shortest_path(G, buildings=buildings, route=route)
 
     
