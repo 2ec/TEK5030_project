@@ -5,13 +5,20 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import map_segmentation
 import osmnx as ox
-import get_keypoint_matches as gkm
 
 
 def get_affine_transformation(img, pts1, pts2):
     rows,cols, *_ = img.shape
     
     M = cv2.getPerspectiveTransform(pts1,pts2)
+    dst = cv2.warpPerspective(src=img, M=M, dsize=(cols, rows))
+
+    return dst
+
+def get_homography_transformation(img, pts1, pts2):
+    rows,cols, *_ = img.shape
+    
+    M, *_ = cv2.findHomography(pts1,pts2)
     dst = cv2.warpPerspective(src=img, M=M, dsize=(cols, rows))
 
     return dst
@@ -165,7 +172,7 @@ def merge_images(img1, img2, match_points):
     
     x, y, *_ = smallest_img.shape
     unrotate[0:x, 0:y] = smallest_img.copy()
-    unrotate_warped = get_affine_transformation(unrotate, img2_match, img1_match)
+    unrotate_warped = get_homography_transformation(unrotate, img2_match, img1_match) #get_affine_transformation(unrotate, img2_match, img1_match)
 
     overlay = image_plotter.get_overlay_img(largest_img, unrotate_warped)
     #plt.imshow(overlay)
@@ -204,12 +211,12 @@ def main4():
     # ([1081., 557.], [337., 672.]),
     # ([984., 101.], [240., 220.]),,
 
-    # match_points = [
-    #             ([1370., 876.], [629., 987.]),
-    #             ([760., 142.], [28., 256.]),
-    #             ([753., 750.], [16., 870.]),
-    #             ([1247., 260.], [504., 376.])
-    #         ]
+    match_points = [
+                ([1370., 876.], [629., 987.]),
+                ([760., 142.], [28., 256.]),
+                ([753., 750.], [16., 870.]),
+                ([1247., 260.], [504., 376.])
+            ]
 
 
     fly_match = []
@@ -252,7 +259,8 @@ def main5():
                 ([1370., 876.], [629., 987.]),
                 ([760., 142.], [28., 256.]), 
                 ([753., 750.], [16., 870.]),
-                ([1247., 260.], [504., 376.])
+                ([1247., 260.], [504., 376.]),
+                
             ]
     
     kjeller_fly_medium = cv2.imread("dataset/map/kjeller_flyfoto_medium.png")
@@ -262,13 +270,13 @@ def main5():
     kjeller_kart_lite = cv2.cvtColor(kjeller_kart_lite, cv2.COLOR_BGR2RGB)
 
     overlay = merge_images(kjeller_fly_medium, kjeller_kart_lite, match_points)
-    plt.imsave("overlay.png", overlay, dpi=400.)
+    plt.imsave("overlay_homography.png", overlay, dpi=400.)
     
 
 if __name__ == "__main__":
     # main()
     # main1()
     # main3()
-    main4()
-    # main5()
+    # main4()
+    main5()
     
