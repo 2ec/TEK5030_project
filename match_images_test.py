@@ -167,14 +167,13 @@ class match_image:
         elif len(opt.resize) == 1 and opt.resize[0] > 0:
             print('Will resize max dimension to {}'.format(opt.resize[0]))
         elif len(opt.resize) == 1:
-            print('Will not resize images')
+            # print('Will not resize images')
+            pass
         else:
             raise ValueError('Cannot specify more than two integers for --resize')
 
         with open(opt.input_pairs, 'r') as f:
-            print(f)
             pairs = [l.split() for l in f.readlines()]
-            print(pairs)
 
         if opt.max_length > -1:
             pairs = pairs[0:np.min([len(pairs), opt.max_length])]
@@ -207,16 +206,16 @@ class match_image:
 
         # Create the output directories if they do not exist already.
         input_dir = Path(opt.input_dir)
-        print('Looking for data in directory \"{}\"'.format(input_dir))
+        # print('Looking for data in directory \"{}\"'.format(input_dir))
         output_dir = Path(opt.output_dir)
         output_dir.mkdir(exist_ok=True, parents=True)
-        print('Will write matches to directory \"{}\"'.format(output_dir))
-        if opt.eval:
-            print('Will write evaluation results',
-                'to directory \"{}\"'.format(output_dir))
-        if opt.viz:
-            print('Will write visualization images to',
-                'directory \"{}\"'.format(output_dir))
+        # print('Will write matches to directory \"{}\"'.format(output_dir))
+        # if opt.eval:
+        #     print('Will write evaluation results',
+        #         'to directory \"{}\"'.format(output_dir))
+        # if opt.viz:
+        #     print('Will write visualization images to',
+        #         'directory \"{}\"'.format(output_dir))
 
         timer = AverageTimer(newline=True)
         for i, pair in enumerate(pairs):
@@ -265,7 +264,7 @@ class match_image:
                 timer.update('load_cache')
 
             if not (do_match or do_eval or do_viz or do_viz_eval):
-                timer.print('Finished pair {:5} of {:5}'.format(i, len(pairs)))
+                # timer.print('Finished pair {:5} of {:5}'.format(i, len(pairs)))
                 continue
 
             # If a rotation integer is provided (e.g. from EXIF data), use it:
@@ -283,6 +282,8 @@ class match_image:
                 self.main_image, device, opt.resize, rot0, opt.resize_float)
             image1, inp1, scales1 = read_image(
                 self.part_image, device, opt.resize, rot1, opt.resize_float)
+            print("-----------------------------------------------------")
+            print("shape of inputs: ")
             print(image0.shape, image1.shape)
             if image0 is None or image1 is None:
                 print('Problem reading image pair: {} {}'.format(
@@ -418,7 +419,7 @@ class match_image:
 
                 timer.update('viz_eval')
 
-            timer.print('Finished pair {:5} of {:5}'.format(i, len(pairs)))
+            # timer.print('Finished pair {:5} of {:5}'.format(i, len(pairs)))
 
         if opt.eval:
             # Collate the results into a final table and print to terminal.
