@@ -138,11 +138,11 @@ def get_k_shortest_paths(G:nx.MultiDiGraph, origin_point:tuple, destination_poin
     return route
 
 if __name__ == "__main__":
-    # filepath = "dataset/map/blindern_kart.png"
-    show = False
-    # img = image_plotter.load_image(filepath)
-    # morpho_open = extract_roads_from_image(img, plot_imgs=True)
- 
+    filepath = "dataset/map/blindern_kart.png"
+    show = True
+    img = image_plotter.load_image(filepath)
+    morpho_open = extract_roads_from_image(img, plot_imgs=True)
+    """
     center_point = (59.9433832, 10.727962) # Blindern
     #center_point = (59.9167329, 10.5999988) # Bærum
     #center_point = (59.9485069, 10.6310962) # Bærum sving
@@ -160,4 +160,4 @@ if __name__ == "__main__":
 
     image_plotter.plot_roads_buildings_shortest_path(G, buildings=buildings, route=route)
 
-    
+    """
