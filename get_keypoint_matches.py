@@ -29,7 +29,8 @@ def get_keypoints(npz, num_keypoints=4):
     for i in true_matches:
         if i:
             total += 1
-
+    if num_keypoints == "all":
+        num_keypoints = total
     if total < num_keypoints:
         num_keypoints = total
 
@@ -111,5 +112,5 @@ if __name__ == "__main__":
     main_image = cv2.imread(main_imagepath)
     side_image = cv2.imread(side_imagepath)
 
-    keypoints = get_matchpoints(main_image, side_image)
+    keypoints = get_matchpoints(main_image, side_image, "all")
     print(keypoints)
