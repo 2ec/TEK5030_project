@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import map_segmentation
 import osmnx as ox
-from SuperGluePretrainedNetwork import get_keypoint_matches
+# from SuperGluePretrainedNetwork import get_keypoint_matches
 
 
 def get_affine_transformation(img, pts1, pts2):
@@ -16,8 +16,6 @@ def get_affine_transformation(img, pts1, pts2):
 
     return dst
 
-def merge_images():
-    pass
 
 def rotate_crop_img(img, pts1, pts2, plot=False):    
     dst = get_affine_transformation(img, pts1, pts2)
@@ -144,16 +142,118 @@ def main3():
     plt.show()
 
 
-def main4():
-    kjeller_fly_medium = cv2.imread("dataset/map/kjeller_flyfoto_medium.png")
-    kjeller_map = cv2.imread("dataset/map/kjeller_kart_lite.png")
+def merge_images(img1, img2, match_points):
+    img1_match = []
+    img2_match = []
 
-    get_keypoint_matches.get_matchpoints(img1=kjeller_fly_medium, img2=kjeller_map)
+    for matches in match_points:
+        point1, point2 = matches
+        img1_match.append(point1)
+        img2_match.append(point2)
+
+    img1_match = np.array(img1_match, dtype=np.float32)
+    img2_match = np.array(img2_match, dtype=np.float32)
+
+    if img1.shape >= img2.shape:
+        smallest_img = img2.copy()
+        largest_img = img1.copy()
+    else:
+        smallest_img = img1.copy()
+        largest_img = img2.copy()
+
+    unrotate = np.zeros(largest_img.shape, dtype=np.uint8)
     
+    x, y, *_ = smallest_img.shape
+    unrotate[0:x, 0:y] = smallest_img.copy()
+    unrotate_warped = get_affine_transformation(unrotate, img2_match, img1_match)
+
+    overlay = image_plotter.get_overlay_img(largest_img, unrotate_warped)
+    plt.imshow(overlay)
+    plt.show()
+
+def main4():
+    kjeller_fly_medium = cv2.imread("dataset/map/kjeller_flyfoto_medium.png", )
+    kjeller_kart_lite = cv2.imread("dataset/map/kjeller_kart_lite.png")
+
+    kjeller_fly_medium = cv2.cvtColor(kjeller_fly_medium, cv2.COLOR_BGR2RGB)
+    kjeller_kart_lite = cv2.cvtColor(kjeller_kart_lite, cv2.COLOR_BGR2RGB)
+
+    if True:
+        plt.subplot(121)
+        plt.imshow(kjeller_fly_medium)
+        plt.title('kjeller_fly_medium')
+        plt.subplot(122)
+        plt.imshow(kjeller_kart_lite)
+        plt.title('kjeller_kart_lite')
+        plt.show()
+
+    # (kjeller_flyfoto_medium, kjeller_kart_lite)
+    # ([1002., 518.], [258., 634.])
+    # ([1064., 661.], [326., 777.]),
+    # ([757., 684.], [13., 797.]),  
+    # ([1081., 557.], [337., 672.]),
+    # ([984., 101.], [240., 220.]),,
+    match_points = [
+                ([1370., 876.], [629., 987.]),
+                ([760., 142.], [28., 256.]),
+                ([753., 750.], [16., 870.]),
+                ([1247., 260.], [504., 376.])
+            ]
+    fly_match = []
+    map_match = []
+
+    for matches in match_points:
+        point1, point2 = matches
+        fly_match.append(point1)
+        map_match.append(point2)
+
+    fly_match = np.array(fly_match, dtype=np.float32)
+    map_match = np.array(map_match, dtype=np.float32)
+
+    x, y, *_ = kjeller_kart_lite.shape
+    #rotated_boarder = cv2.rectangle(kjeller_kart_lite, (0,0), (x,y), color=(255, 0, 0), thickness=30)
+    unrotate = np.zeros(kjeller_fly_medium.shape, dtype=np.uint8)
+    
+    x, y, *_ = kjeller_kart_lite.shape
+    unrotate[0:x, 0:y] = kjeller_kart_lite.copy()
+    kjeller_kart_lite_warp = get_affine_transformation(unrotate, map_match, fly_match)
+
+    print(kjeller_fly_medium.shape, kjeller_kart_lite_warp.shape)
+    if True:
+        plt.subplot(121)
+        plt.imshow(kjeller_fly_medium)
+        plt.title('Input')
+        plt.subplot(122)
+        plt.imshow(kjeller_kart_lite_warp)
+        plt.title('Unrotated')
+        plt.show()
+
+    overlay = image_plotter.get_overlay_img(kjeller_fly_medium, kjeller_kart_lite_warp)
+    plt.imshow(overlay)
+    plt.show()
+
+
+def main5():
+    match_points = [
+                ([1370., 876.], [629., 987.]), # R
+                ([760., 142.], [28., 256.]), 
+                ([753., 750.], [16., 870.]),
+                ([1247., 260.], [504., 376.])
+            ]
+    
+    kjeller_fly_medium = cv2.imread("dataset/map/kjeller_flyfoto_medium.png")
+    kjeller_kart_lite = cv2.imread("dataset/map/kjeller_kart_lite.png")
+
+    kjeller_fly_medium = cv2.cvtColor(kjeller_fly_medium, cv2.COLOR_BGR2RGB)
+    kjeller_kart_lite = cv2.cvtColor(kjeller_kart_lite, cv2.COLOR_BGR2RGB)
+
+    merge_images(kjeller_fly_medium, kjeller_kart_lite, match_points)
 
 
 if __name__ == "__main__":
     # main()
     # main1()
     # main3()
-    main4()
+    # main4()
+    main5()
+    
