@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import map_segmentation
 import osmnx as ox
-# from SuperGluePretrainedNetwork import get_keypoint_matches
+import get_keypoint_matches as gkm
 
 
 def get_affine_transformation(img, pts1, pts2):
@@ -179,13 +179,22 @@ def main4():
     kjeller_fly_medium = cv2.cvtColor(kjeller_fly_medium, cv2.COLOR_BGR2RGB)
     kjeller_kart_lite = cv2.cvtColor(kjeller_kart_lite, cv2.COLOR_BGR2RGB)
 
+    match_points = gkm.get_matchpoints(kjeller_fly_medium, kjeller_kart_lite)
+    print("----------------")
+    print(match_points)
+
     if True:
+        colours = ["*b", "*g", "*r", "*m"]
         plt.subplot(121)
         plt.imshow(kjeller_fly_medium)
         plt.title('kjeller_fly_medium')
+        for i in range(len(match_points)):
+            plt.plot(match_points[i][0][0], match_points[i][0][1], colours[i])
         plt.subplot(122)
         plt.imshow(kjeller_kart_lite)
         plt.title('kjeller_kart_lite')
+        for i in range(len(match_points)):
+            plt.plot(match_points[i][1][0], match_points[i][1][1], colours[i])
         plt.show()
 
     # (kjeller_flyfoto_medium, kjeller_kart_lite)
@@ -194,12 +203,15 @@ def main4():
     # ([757., 684.], [13., 797.]),  
     # ([1081., 557.], [337., 672.]),
     # ([984., 101.], [240., 220.]),,
-    match_points = [
-                ([1370., 876.], [629., 987.]),
-                ([760., 142.], [28., 256.]),
-                ([753., 750.], [16., 870.]),
-                ([1247., 260.], [504., 376.])
-            ]
+
+    # match_points = [
+    #             ([1370., 876.], [629., 987.]),
+    #             ([760., 142.], [28., 256.]),
+    #             ([753., 750.], [16., 870.]),
+    #             ([1247., 260.], [504., 376.])
+    #         ]
+
+
     fly_match = []
     map_match = []
 
@@ -257,6 +269,6 @@ if __name__ == "__main__":
     # main()
     # main1()
     # main3()
-    # main4()
-    main5()
+    main4()
+    # main5()
     

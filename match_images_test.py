@@ -153,7 +153,6 @@ class match_image:
         opt.resize = [-1]
         # opt.resize__float = False
         output_names = "result_images"
-        print(opt)
 
         assert not (opt.opencv_display and not opt.viz), 'Must use --viz with --opencv_display'
         assert not (opt.opencv_display and not opt.fast_viz), 'Cannot use --opencv_display without --fast_viz'
