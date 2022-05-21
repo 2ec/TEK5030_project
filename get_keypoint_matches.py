@@ -103,8 +103,8 @@ if __name__ == "__main__":
 
     # points = get_keypoints(path)
     # print(points)
-    image_name1 = "kjeller_flyfoto_medium.png"
-    image_name2 = "kjeller_kart_lite.png"
+    image_name1 = "kjeller_kart_ny.png"
+    image_name2 = "kjeller_flyfoto_ny.png"
     imagepath1 = os.path.join(dir_path, image_name1)
     imagepath2 = os.path.join(dir_path, image_name1)
     main_imagepath = os.path.join(dir_path, image_name1)
