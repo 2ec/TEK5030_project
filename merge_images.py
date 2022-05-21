@@ -168,8 +168,9 @@ def merge_images(img1, img2, match_points):
     unrotate_warped = get_affine_transformation(unrotate, img2_match, img1_match)
 
     overlay = image_plotter.get_overlay_img(largest_img, unrotate_warped)
-    plt.imshow(overlay)
-    plt.show()
+    #plt.imshow(overlay)
+    #plt.show()
+    return overlay
 
 def main4():
     kjeller_fly_medium = cv2.imread("dataset/map/kjeller_flyfoto_medium.png", )
@@ -228,9 +229,10 @@ def main4():
         plt.title('Unrotated')
         plt.show()
 
-    overlay = image_plotter.get_overlay_img(kjeller_fly_medium, kjeller_kart_lite_warp)
+    overlay = image_plotter.get_overlay_img(kjeller_fly_medium, kjeller_kart_lite_warp, alpha=0.7)
     plt.imshow(overlay)
     plt.show()
+    
 
 
 def main5():
@@ -247,8 +249,9 @@ def main5():
     kjeller_fly_medium = cv2.cvtColor(kjeller_fly_medium, cv2.COLOR_BGR2RGB)
     kjeller_kart_lite = cv2.cvtColor(kjeller_kart_lite, cv2.COLOR_BGR2RGB)
 
-    merge_images(kjeller_fly_medium, kjeller_kart_lite, match_points)
-
+    overlay = merge_images(kjeller_fly_medium, kjeller_kart_lite, match_points)
+    plt.imsave("overlay.png", overlay, dpi=400.)
+    
 
 if __name__ == "__main__":
     # main()
