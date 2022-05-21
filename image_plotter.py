@@ -66,5 +66,7 @@ def extend_image_channels(img:np.ndarray, num_chanels:int):
 def get_overlay_img(img1:np.ndarray, img2:np.ndarray, alpha:int=0.5) -> np.ndarray:
     overlay = img1.copy()
     output = img2.copy()
-    new_img = cv2.addWeighted(overlay, alpha, output, 1 - alpha, 0, output)
-    return new_img
+    overlap = np.where(output > 0, output, overlay)
+    
+    dst = cv2.addWeighted(overlap, 0.7, overlay, 0.3, 0)
+    return dst
