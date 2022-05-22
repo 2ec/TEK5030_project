@@ -8,7 +8,7 @@ from match_images_test import match_image
 def get_keypoints(npz, num_keypoints=4):
     """
     Input: 
-        npzpath: path to npz matching file
+        npz: a numpy array
         num_keypoints: number of keypoints
     Output:
         keypoints: list with tuples of coordinates to mapping points within the image
