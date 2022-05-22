@@ -12,10 +12,11 @@ Please note that some files are deprecated versions of old code in this folder, 
 
 The report is also found in this zipped folder. Please refer to it for details on the project. 
 
-## Pipeline of the code
+## Pipeline of the code and how to run
 Run 
 ``` python merge_images.py ```
-this calls further on "get_matchpoints()" from get_keypoint_matches.py,  which runs
+to run the code with predefined images.
+This calls further on "get_matchpoints()" from get_keypoint_matches.py,  which runs
 
 &emsp;- match_image, from match_images_test.py, thats a modification of SuperGlues match_images
 
@@ -23,15 +24,10 @@ this calls further on "get_matchpoints()" from get_keypoint_matches.py,  which r
 
 merge_images(), then uses finds the homography, warps it and merges/overlays the images. 
 
+* To test the code with other images, these should be specified in the main function in merge_images.py. Note the code has only been testet with images from Kartverkets Norgeskart, so please use the spesified aerial and "drawn" maps from this source for the best results. 
+
 ## File explaination
 If you want to change images and maps being merged, please change filenames in the code.
 All usable image should be put inside the "dataset" folder.
 
 Segmented_unet.py was used to extract the roads from aerial photos. 
-## How to install OSMnx
-This is used to download, extract and show roads from maps from OpenStreetMap.
-Be in your chosen virtual Conda environment.
-```
-conda config --prepend channels conda-forge
-conda install osmnx
-```
