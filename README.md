@@ -26,6 +26,8 @@ merge_images(), then uses finds the homography, warps it and merges/overlays the
 ## File explaination
 If you want to change images and maps being merged, please change filenames in the code.
 All usable image should be put inside the "dataset" folder.
+
+Segmented_unet.py was used to extract the roads from aerial photos. 
 ## How to install OSMnx
 This is used to download, extract and show roads from maps from OpenStreetMap.
 Be in your chosen virtual Conda environment.
